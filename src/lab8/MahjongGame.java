@@ -18,25 +18,25 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 
-public class MahjongBoard extends JFrame {
+public class MahjongGame extends JFrame {
 
-	private static final int BOARD_WIDTH = 1100;
-	private static final int BOARD_HEIGHT = 800;
-	private GamePanel gamePanel;
+	private static final int BOARD_WIDTH = 950;
+	private static final int BOARD_HEIGHT = 650;
+	private PlayingBoard playingBoard;
 
 	private final String title = "Garrett Glenn Mah-Jong \t";
 	
-	private JFrame removedFrame = null;
-	private JMenuItem removedTilesItem = null;
-	private JFrame helpFrame = new JFrame();
+	private JFrame deleteFrame = null;
+	private JMenuItem deletedTiles = null;
+	private JFrame helperFrame = new JFrame();
 
-	public MahjongBoard() {
+	public MahjongGame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setSize(BOARD_WIDTH, BOARD_HEIGHT);
 		setLayout(new BorderLayout());
 
-		gamePanel = new GamePanel(getContentPane().getWidth(),
+		playingBoard = new PlayingBoard(getContentPane().getWidth(),
 				getContentPane().getHeight(), true);
 
 		JMenuBar menubar = new JMenuBar();
@@ -94,7 +94,7 @@ public class MahjongBoard extends JFrame {
 						JOptionPane.YES_NO_OPTION
 						);
 				if (selection == 0) {
-					newGame(gamePanel.trackGame);
+					newGame(playingBoard.trackGame);
 				}
 			}
 		});
@@ -149,18 +149,18 @@ public class MahjongBoard extends JFrame {
 		});
 		menu.add(item);
 
-		removedTilesItem = new JMenuItem("Removed Tiles");
-		removedTilesItem.addActionListener(new ActionListener() {
+		deletedTiles = new JMenuItem("Removed Tiles");
+		deletedTiles.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (removedFrame == null) {
+				if (deleteFrame == null) {
 					initRemovedFrame();
 				}
-				removedFrame.setVisible(true);
-				removedTilesItem.setEnabled(false);
+				deleteFrame.setVisible(true);
+				deletedTiles.setEnabled(false);
 			}
 		});
-		menu.add(removedTilesItem);
+		menu.add(deletedTiles);
 
 		menubar.add(menu);
 		setJMenuBar(menubar);
@@ -177,26 +177,26 @@ public class MahjongBoard extends JFrame {
 				text.setTabSize(2);
 				scrollPane.setPreferredSize(new Dimension(550, 350));
 				panel.add(scrollPane);
-				helpFrame.setTitle("Game Rules");
-				helpFrame.add(panel);
-				helpFrame.setVisible(true);
-				helpFrame.setSize(600, 400);
+				helperFrame.setTitle("Game Rules");
+				helperFrame.add(panel);
+				helperFrame.setVisible(true);
+				helperFrame.setSize(600, 400);
 			}
 		});
 		menu.add(item);
 
 		menubar.add(menu);
 
-		helpFrame.addWindowListener(new WindowAdapter() {
+		helperFrame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				helpFrame.dispose();
-				helpFrame = new JFrame();
-				helpFrame.addWindowListener(this);
+				helperFrame.dispose();
+				helperFrame = new JFrame();
+				helperFrame.addWindowListener(this);
 			}
 		});
 
-		add(gamePanel);
+		add(playingBoard);
 
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -213,44 +213,22 @@ public class MahjongBoard extends JFrame {
 			}
 		});
 
-	setTitle(title + gamePanel.trackGame);
+	setTitle(title + playingBoard.trackGame);
 		setResizable(false);
 		setVisible(true);
 	}
 
 	private void initRemovedFrame() {
-		removedFrame = new JFrame("Removed Tiles");
-		JScrollPane scrollPane = new JScrollPane(gamePanel.getRemovedPanel());
-		removedFrame.add(scrollPane);
-		removedFrame.addWindowListener(new WindowAdapter() {
+		deleteFrame = new JFrame("Removed Tiles");
+		JScrollPane scrollPane = new JScrollPane(playingBoard.getRemovedPanel());
+		deleteFrame.add(scrollPane);
+		deleteFrame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				removedTilesItem.setEnabled(true);
+				deletedTiles.setEnabled(true);
 			}
 		});
-		gamePanel.resizeRemovedFrame();
-	}
-	
-	public void checkEndGame() {
-		String[] options = {"New Game", "Cancel", "Exit Game"};
-		int selection = JOptionPane.showOptionDialog(this, "No more moves exist.\n" +
-				"Choose Cancel to go back to this game, otherwise " +
-				"choose New Game or Exit Game.", "End Game",
-				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-				null, options, options[0]);
-                
-		switch (selection) {
-		case 0:
-			newGame();
-			break;
-		case 2:
-			close();
-			break;
-		case 1:
-			// Intentional fall-through
-		default:
-			break;
-		}
+		playingBoard.resizeRemovedFrame();
 	}
 
 
@@ -263,28 +241,28 @@ public class MahjongBoard extends JFrame {
 	}
 	private void newGame(Long randomNumber) {
 		
-		remove(gamePanel);
+		remove(playingBoard);
 
 		int width = getContentPane().getWidth();
 		int height = getContentPane().getHeight();
 
 		if (randomNumber == null) {
-			gamePanel = new GamePanel(width, height);
+			playingBoard = new PlayingBoard(width, height);
 		}
 		else {
-			gamePanel = new GamePanel(width, height, randomNumber);
+			playingBoard = new PlayingBoard(width, height, randomNumber);
 		}
 
-		add(gamePanel);
+		add(playingBoard);
 
 		
 
-		setTitle(title + gamePanel.trackGame);
+		setTitle(title + playingBoard.trackGame);
 		repaint();
 	}
 
 	public static void main(String[] args) {
-		MahjongBoard mahjongBoard = new MahjongBoard();
+		MahjongGame mahjongBoard = new MahjongGame();
 	}
 
 }

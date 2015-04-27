@@ -16,7 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
-public class GamePanel extends JPanel implements MouseListener {
+public class PlayingBoard extends JPanel implements MouseListener {
 
 	
 	private static Random random;
@@ -30,19 +30,19 @@ public class GamePanel extends JPanel implements MouseListener {
 	private JPanel removedPanel = null;
 	private boolean init = true;
 
-	public GamePanel(int width, int height) {
+	public PlayingBoard(int width, int height) {
 		this(width, height, true);
 	}
 
-	public GamePanel(int width, int height, boolean drawRound) {
+	public PlayingBoard(int width, int height, boolean drawRound) {
 		this(width, height, drawRound, null);
 	}
 
-	public GamePanel(int width, int height, Long randomNumber) {
+	public PlayingBoard(int width, int height, Long randomNumber) {
 		this(width, height, true, randomNumber);
 	}
 
-	public GamePanel(int width, int height, boolean drawRound,
+	public PlayingBoard(int width, int height, boolean drawRound,
 			Long randomNumberGame) {
 		if (randomNumberGame == null) {
 			randomNumberGame = new Date().getTime() % 1000000;
