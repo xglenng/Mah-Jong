@@ -24,13 +24,6 @@ public class MahjongBoard extends JFrame {
 	private static final int BOARD_HEIGHT = 800;
 	private GamePanel gamePanel;
 
-//	// File has New game, then a separator before these items
-//	private final int UNDO_INDEX = 4;
-//	private final int REDO_INDEX = UNDO_INDEX + 1;
-//	private final int HINT_INDEX = REDO_INDEX + 1;
-//	// Save menu item is after a separator
-//	private final int SAVE_INDEX = HINT_INDEX + 2;
-
 	private final String title = "Garrett Glenn Mah-Jong \t";
 	
 	private JFrame removedFrame = null;
@@ -101,7 +94,7 @@ public class MahjongBoard extends JFrame {
 						JOptionPane.YES_NO_OPTION
 						);
 				if (selection == 0) {
-					newGame(gamePanel.gameNumber);
+					newGame(gamePanel.trackGame);
 				}
 			}
 		});
@@ -220,7 +213,7 @@ public class MahjongBoard extends JFrame {
 			}
 		});
 
-	setTitle(title + gamePanel.gameNumber);
+	setTitle(title + gamePanel.trackGame);
 		setResizable(false);
 		setVisible(true);
 	}
@@ -286,7 +279,7 @@ public class MahjongBoard extends JFrame {
 
 		
 
-		setTitle(title + gamePanel.gameNumber);
+		setTitle(title + gamePanel.trackGame);
 		repaint();
 	}
 

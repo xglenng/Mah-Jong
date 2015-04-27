@@ -21,15 +21,14 @@ public class GamePanel extends JPanel implements MouseListener {
 	
 	private static Random random;
 	private Map<String, Tile> board = new HashMap<>();
-	private Stack<Tile> removedTiles = new Stack<>();
-	private Stack<Tile> restoredTiles = new Stack<>();
+	private Stack<Tile> tilesDeleted = new Stack<>();
+	private Stack<Tile> tilesRestored = new Stack<>();
 	private String[] backgrounds = {"scroll.png"};
 	private String backgroundString;
-	protected long gameNumber;
-	private Tile selectedTile;
+	protected long trackGame;
+	private Tile tileChosen;
 	private JPanel removedPanel = null;
 	private boolean init = true;
-	private boolean initHint = false;
 
 	public GamePanel(int width, int height) {
 		this(width, height, true);
@@ -48,7 +47,7 @@ public class GamePanel extends JPanel implements MouseListener {
 		if (randomNumberGame == null) {
 			randomNumberGame = new Date().getTime() % 1000000;
 		}
-		gameNumber = randomNumberGame;
+		trackGame = randomNumberGame;
 		random = new Random(randomNumberGame);
 		initialize(width, height, drawRound);
 	}
@@ -310,7 +309,7 @@ public class GamePanel extends JPanel implements MouseListener {
        
 
 	protected int getRemovedTileCount() {
-		return removedTiles.size();
+		return tilesDeleted.size();
 	}
         
 	
@@ -364,22 +363,22 @@ public class GamePanel extends JPanel implements MouseListener {
 	 * @param zPos the integer logical z position of the tile to remove
 	 * @return the Tile that was removed from the game board
 	 */
-	public Tile removeTile(int xPos, int yPos, int zPos) {
+	public Tile tilesDeletion(int xPos, int yPos, int zPos) {
 		Tile tile = board.remove(getKey(xPos, yPos, zPos));
-		int stackSize = removedTiles.size();
+		int stackSize = tilesDeleted.size();
 		if (tile == null) {
-			System.err.println("error no tile");
+			System.err.println("missing the title");
 		} else {
 			
 			tile.isDirty = true;
-			removedTiles.push(tile);
+			tilesDeleted.push(tile);
 			remove(tile);
 			redraw();
 			repaint();
 		}
-		if (stackSize % 2 != 0 && removedTiles.size() > stackSize && removedPanel != null) {
+		if (stackSize % 2 != 0 && tilesDeleted.size() > stackSize && removedPanel != null) {
 			removedPanel.removeAll();
-			for (Tile t: removedTiles) {
+			for (Tile t: tilesDeleted) {
 				removedPanel.add(t, 0);
 			}
 			resizeRemovedFrame();
@@ -405,7 +404,7 @@ public class GamePanel extends JPanel implements MouseListener {
 	 * @param tile the Tile to remove
 	 * @return the Tile that was removed, or null if the tile didn't exist
 	 */
-	public Tile removeTile(Tile tile) {
+	public Tile tilesDeletion(Tile tile) {
 		if (tile == null) {
 			System.err.println("The tile to remove was null.");
 			return null;
@@ -414,7 +413,7 @@ public class GamePanel extends JPanel implements MouseListener {
 			System.err.println("The tile hasn't been placed yet.");
 			return null;
 		}
-		return removeTile(tile.xPos, tile.yPos, tile.zPos);
+		return tilesDeletion(tile.xPos, tile.yPos, tile.zPos);
 	}
 	
 
@@ -524,33 +523,33 @@ public class GamePanel extends JPanel implements MouseListener {
 		Object source = e.getSource();
 		if (source instanceof Tile && isOpen((Tile) source)) {
 			Tile tile = (Tile) source;
-			restoredTiles.clear();
-			if (selectedTile != null && selectedTile != tile
-					&& selectedTile.matches(tile)) {
-				removeTile(tile);
-				selectedTile.highlight(false);
-				removeTile(selectedTile);
+			tilesRestored.clear();
+			if (tileChosen != null && tileChosen != tile
+					&& tileChosen.matches(tile)) {
+				tilesDeletion(tile);
+				tileChosen.highlight(false);
+				tilesDeletion(tileChosen);
 				
 				
-				selectedTile = null;
-			} else if (selectedTile == tile) {
-				selectedTile.highlight(false);
-				selectedTile = null;
+				tileChosen = null;
+			} else if (tileChosen == tile) {
+				tileChosen.highlight(false);
+				tileChosen = null;
 				repaint();
-			} else if (selectedTile != null) {
-				selectedTile.highlight(false);
-				selectedTile = tile;
+			} else if (tileChosen != null) {
+				tileChosen.highlight(false);
+				tileChosen = tile;
 				tile.highlight(true);
 				repaint();
 			} else {
-				selectedTile = tile;
-				selectedTile.highlight(true);
+				tileChosen = tile;
+				tileChosen.highlight(true);
 				repaint();
 			}
 		} else if (!(source instanceof Tile)) {
-			if (selectedTile != null) {
-				selectedTile.highlight(false);
-				selectedTile = null;
+			if (tileChosen != null) {
+				tileChosen.highlight(false);
+				tileChosen = null;
 				repaint();
 			}
 		}
@@ -560,7 +559,7 @@ public class GamePanel extends JPanel implements MouseListener {
 		if (removedPanel == null) {
 			GridLayout layout = new GridLayout(0, 2, 5, 5);
 			removedPanel = new JPanel(layout);
-			for (Tile tile: removedTiles) {
+			for (Tile tile: tilesDeleted) {
 				removedPanel.add(tile, 0);
 			}
 		}
