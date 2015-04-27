@@ -20,14 +20,14 @@ public class PlayingBoard extends JPanel implements MouseListener {
 
 	
 	private static Random random;
-	private Map<String, Tile> board = new HashMap<>();
-	private Stack<Tile> tilesDeleted = new Stack<>();
-	private Stack<Tile> tilesRestored = new Stack<>();
 	private String[] backgrounds = {"scroll.png"};
 	private String backgroundString;
 	protected long trackGame;
 	private Tile tileChosen;
 	private JPanel removedPanel = null;
+        private Map<String, Tile> board = new HashMap<>();
+	private Stack<Tile> tilesDeleted = new Stack<>();
+	private Stack<Tile> tilesRestored = new Stack<>();
 	private boolean init = true;
 
 	public PlayingBoard(int width, int height) {
@@ -72,8 +72,6 @@ public class PlayingBoard extends JPanel implements MouseListener {
 	}
 
 	/**
-	 * method that builds the board and decides which corners to implement
-	 *
 	 * @param width the integer width of the game board
 	 * @param height the integer height of the game board
 	 * @param drawRound a boolean indicating whether to draw round corners
@@ -87,13 +85,12 @@ public class PlayingBoard extends JPanel implements MouseListener {
 
 		List<Tile> deck = initializeDeck(drawRound);
 
-		// Start at the top middle tile
+		
 		int xPos = 0;
 		int yPos = 0;
 		int zPos = 0;
 
-		// Every tile gets set to the correct size, then we set the position
-		// and put the tile into our board
+                    // set the tile to our desired size and add it to our playing board
 		for (Tile tile : deck) {
 			tile.setSize(Tile.WIDTH, Tile.HEIGHT);
 			tile.xPos = xPos;
@@ -103,7 +100,7 @@ public class PlayingBoard extends JPanel implements MouseListener {
 			tile.addMouseListener(this);
 			board.put(getKey(xPos, yPos, zPos), tile);
 
-			int[] newPositions = getNewPositions(xPos, yPos, zPos);
+			int[] newPositions = getCoordinates(xPos, yPos, zPos);
 			xPos = newPositions[0];
 			yPos = newPositions[1];
 			zPos = newPositions[2];
@@ -113,17 +110,13 @@ public class PlayingBoard extends JPanel implements MouseListener {
 	}
 
 	/**
-	 * This method handles the logic behind adding the coordinates for tiles,
-	 * for example the transition from layer to layer, and the three special
-	 * case tiles
-	 *
 	 * @param currentXPos
 	 * @param currentYPos
 	 * @param currentZPos
 	 * @return a three element array, with 0 being the new xPos, 1 being the new
 	 * yPos, and 2 being the new zPos
 	 */
-	private int[] getNewPositions(int currentXPos, int currentYPos, int currentZPos) {
+	private int[] getCoordinates(int currentXPos, int currentYPos, int currentZPos) {
 		int maxX;
 		int maxY;
 
@@ -148,7 +141,7 @@ public class PlayingBoard extends JPanel implements MouseListener {
 				maxY = 4;
 				switch (Math.abs(currentYPos)) {
 					case 1:
-					// Intentional fall-through, both have max as 6
+					
 					case 4:
 						maxX = 6;
 						break;

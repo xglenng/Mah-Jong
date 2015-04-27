@@ -26,8 +26,8 @@ public class MahjongGame extends JFrame {
 
 	private final String title = "Garrett Glenn Mah-Jong \t";
 	
-	private JFrame deleteFrame = null;
-	private JMenuItem deletedTiles = null;
+	private JFrame myJframe = null;
+	private JMenuItem menuItems = null;
 	private JFrame helperFrame = new JFrame();
 
 	public MahjongGame() {
@@ -42,9 +42,6 @@ public class MahjongGame extends JFrame {
 		JMenuBar menubar = new JMenuBar();
 		JMenu menu = new JMenu("File");
 		JMenuItem item = new JMenuItem("New Game");
-		item.setMnemonic(KeyEvent.VK_N);
-		item.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_N, KeyEvent.CTRL_MASK));
 		item.setToolTipText("Begins a new, random game.");
 		item.addActionListener(new ActionListener() {
 			@Override
@@ -63,20 +60,19 @@ public class MahjongGame extends JFrame {
 		menu.add(item);
 
 		item = new JMenuItem("New Numbered Game");
-		item.setMnemonic(KeyEvent.VK_G);
 		item.setToolTipText("Begins a new game given a game number.");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String number = JOptionPane.showInputDialog(
-						"Enter the game number");
+						"Track a game");
 				if (Helper.isInteger(number) && number.length() == 6) {
 					newGame(Long.parseLong(number));
 				}
 				else if (number != null) {
 					JOptionPane.showMessageDialog((JMenuItem) e.getSource(),
-							"Invalid input, must be a six-digit number",
-							"Bad Game Number",
+							"error enter a six digit number",
+							"retry",
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -107,10 +103,6 @@ public class MahjongGame extends JFrame {
 	
 
 		item = new JMenuItem("Save Game");
-		item.setMnemonic(KeyEvent.VK_S);
-		item.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_S, KeyEvent.CTRL_MASK));
-		item.setToolTipText("Not implemented - keep track of the game number to replay this game for now.");
 		item.setEnabled(false);
 		item.addActionListener(new ActionListener() {
 			@Override
@@ -119,27 +111,21 @@ public class MahjongGame extends JFrame {
 			}
 		});
 		item.setEnabled(false);
-		//menu.add(item, SAVE_INDEX);
 
 		item = new JMenuItem("Exit Game");
-		item.setToolTipText("Exits the game. To continue from the current game state, use Save Game first.");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				close();
 			}
 		});
-		menu.add(item);
-
-		menu.setMnemonic(KeyEvent.VK_F);
+		menu.add(item);	
 
 		menubar.add(menu);
 
 		menu = new JMenu("Options");
-		menu.setMnemonic(KeyEvent.VK_O);
 
-
-		item = new JMenuItem("High Scores");
+		item = new JMenuItem("LeaderBoard");
 		item.setEnabled(false);
 		item.addActionListener(new ActionListener() {
 			@Override
@@ -149,18 +135,18 @@ public class MahjongGame extends JFrame {
 		});
 		menu.add(item);
 
-		deletedTiles = new JMenuItem("Removed Tiles");
-		deletedTiles.addActionListener(new ActionListener() {
+		menuItems = new JMenuItem("Removed Tiles");
+		menuItems.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (deleteFrame == null) {
+				if (myJframe == null) {
 					initRemovedFrame();
 				}
-				deleteFrame.setVisible(true);
-				deletedTiles.setEnabled(false);
+				myJframe.setVisible(true);
+				menuItems.setEnabled(false);
 			}
 		});
-		menu.add(deletedTiles);
+		menu.add(menuItems);
 
 		menubar.add(menu);
 		setJMenuBar(menubar);
@@ -219,13 +205,13 @@ public class MahjongGame extends JFrame {
 	}
 
 	private void initRemovedFrame() {
-		deleteFrame = new JFrame("Removed Tiles");
+		myJframe = new JFrame("Removed Tiles");
 		JScrollPane scrollPane = new JScrollPane(playingBoard.getRemovedPanel());
-		deleteFrame.add(scrollPane);
-		deleteFrame.addWindowListener(new WindowAdapter() {
+		myJframe.add(scrollPane);
+		myJframe.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				deletedTiles.setEnabled(true);
+				menuItems.setEnabled(true);
 			}
 		});
 		playingBoard.resizeRemovedFrame();
