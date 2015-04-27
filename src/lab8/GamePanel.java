@@ -1,26 +1,18 @@
 package lab8;
-import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Stack;
-import java.util.Timer;
-import java.util.TimerTask;
 import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
@@ -424,109 +416,7 @@ public class GamePanel extends JPanel implements MouseListener {
 		}
 		return removeTile(tile.xPos, tile.yPos, tile.zPos);
 	}
-
-	/**
-	 * Performs an undo operation, returns false if the stack of previous moves
-	 * was empty
-	 *
-	 * @return
-	 */
-	public boolean undo() {
-		try {
-			Tile tile1 = removedTiles.pop();
-			Tile tile2 = removedTiles.pop();
-			board.put(getKey(tile1.xPos, tile1.yPos, tile1.zPos), tile1);
-			board.put(getKey(tile2.xPos, tile2.yPos, tile2.zPos), tile2);
-			restoredTiles.push(tile2);
-			restoredTiles.push(tile1);
-			redraw();
-			repaint();
-		} catch (EmptyStackException e) {
-			return false;
-		}
-
-		((MahjongBoard) getTopLevelAncestor()).checkEnabledMenus();
-
-		if (getRemovedTileCount() > 0 && removedPanel != null) {
-			removedPanel.removeAll();
-			for (Tile t: removedTiles) {
-				removedPanel.add(t, 0);
-			}
-			resizeRemovedFrame();
-			removedPanel.revalidate();
-		}
-
-		return true;
-	}
-
-	/**
-	 * Performs a redo if any are available
-	 */
-	public void redo() {
-		try {
-			Tile tile1 = restoredTiles.pop();
-			Tile tile2 = restoredTiles.pop();
-			removeTile(tile1);
-			removeTile(tile2);
-
-			((MahjongBoard) getTopLevelAncestor()).checkEnabledMenus();
-
-			resizeRemovedFrame();
-		} catch (EmptyStackException e) {
-			System.err.println("No more redos");
-		}
-	}
-
-	/**
-	 * Hints a possible move
-	 *
-	 * @param highlight a boolean indicating whether to highlight a move
-	 * @return a boolean indicating whether any moves are left
-	 */
-	public boolean hint(boolean highlight) {
-		return hint(highlight, false);
-	}
-
-	/**
-	 * Hints a possible move or the best possible found move
-	 *
-	 * @param highlight a boolean indicating whether to highlight a move
-	 * @param bestMove a boolean indicating whether to look for the best
-	 * possible move
-	 * @return
-	 */
-	public boolean hint(boolean highlight, boolean bestMove) {
-		for (Tile tile : board.values()) {
-			if (!isOpen(tile)) {
-				continue;
-			}
-			for (Tile t : board.values()) {
-				if (tile == t) {
-					break;
-				}
-				if (isOpen(t) && tile.matches(t)) {
-					if (highlight) {
-						tile.hint(true);
-						t.hint(true);
-						final Tile finalTile1 = tile;
-						final Tile finalTile2 = t;
-						repaint();
-						Timer timer = new Timer();
-						timer.schedule(new TimerTask() {
-							@Override
-							public void run() {
-								finalTile1.hint(false);
-								finalTile2.hint(false);
-								repaint();
-							}
-						}, 1000);
-					}
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	
 
 	/**
 	 * Gets the tile at a given position, if it exists, or null otherwise
@@ -593,18 +483,14 @@ public class GamePanel extends JPanel implements MouseListener {
 	 *
 	 * @return
 	 */
-	public boolean canRedo() {
-		return !restoredTiles.isEmpty();
-	}
+	
 
 	/**
 	 * Returns true if there are any moves to undo
 	 *
 	 * @return
 	 */
-	public boolean canUndo() {
-		return !removedTiles.isEmpty();
-	}
+	
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -627,42 +513,8 @@ public class GamePanel extends JPanel implements MouseListener {
 		if (e.isPopupTrigger() && !(e.getSource() instanceof Tile)) {
 			JPopupMenu popup = new JPopupMenu();
 
-			JMenuItem menuItem = new JMenuItem("Undo");
-			if (canUndo()) {
-				menuItem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						undo();
-					}
-				});
-			}
-			menuItem.setEnabled(canUndo());
-			popup.add(menuItem);
-
-			menuItem = new JMenuItem("Redo");
-			if (canRedo()) {
-				menuItem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						redo();
-					}
-				});
-			}
-			menuItem.setEnabled(canRedo());
-			popup.add(menuItem);
-
-			popup.addSeparator();
-
-			menuItem = new JMenuItem("Hint");
-			menuItem.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (allowHint(((JMenuItem) e.getSource()).getTopLevelAncestor())) {
-						hint(true);
-					}
-				}
-			});
-			popup.add(menuItem);
+			
+			
 
 			popup.show(this, e.getX(), e.getY());
 			return;
@@ -678,10 +530,8 @@ public class GamePanel extends JPanel implements MouseListener {
 				removeTile(tile);
 				selectedTile.highlight(false);
 				removeTile(selectedTile);
-				((MahjongBoard) getTopLevelAncestor()).checkEnabledMenus();
-				if (!hint(false)) {
-					((MahjongBoard) getTopLevelAncestor()).checkEndGame();
-				}
+				
+				
 				selectedTile = null;
 			} else if (selectedTile == tile) {
 				selectedTile.highlight(false);
@@ -717,18 +567,5 @@ public class GamePanel extends JPanel implements MouseListener {
 		return removedPanel;
 	}
 
-	protected boolean allowHint(Container parent) {
-		if (!initHint) {
-			int selection = JOptionPane.showConfirmDialog(parent,
-					"If you use a hint, you will not be eligible for high scores. Continue?",
-					"Use Hints?", JOptionPane.YES_NO_OPTION);
-			if (selection == 0) {
-				initHint = true;
-			}
-			return initHint;
-		}
-		else {
-			return initHint;
-		}
-	}
+	
 }

@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -25,12 +24,12 @@ public class MahjongBoard extends JFrame {
 	private static final int BOARD_HEIGHT = 800;
 	private GamePanel gamePanel;
 
-	// File has New game, then a separator before these items
-	private final int UNDO_INDEX = 4;
-	private final int REDO_INDEX = UNDO_INDEX + 1;
-	private final int HINT_INDEX = REDO_INDEX + 1;
-	// Save menu item is after a separator
-	private final int SAVE_INDEX = HINT_INDEX + 2;
+//	// File has New game, then a separator before these items
+//	private final int UNDO_INDEX = 4;
+//	private final int REDO_INDEX = UNDO_INDEX + 1;
+//	private final int HINT_INDEX = REDO_INDEX + 1;
+//	// Save menu item is after a separator
+//	private final int SAVE_INDEX = HINT_INDEX + 2;
 
 	private final String title = "Garrett Glenn Mah-Jong \t";
 	
@@ -92,7 +91,6 @@ public class MahjongBoard extends JFrame {
 		menu.add(item);
 
 		item = new JMenuItem("Restart");
-		item.setToolTipText("Restarts the current game and clears the undo/redo actions.");
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -111,46 +109,9 @@ public class MahjongBoard extends JFrame {
 
 		menu.addSeparator();
 
-		item = new JMenuItem("Undo");
-		item.setMnemonic(KeyEvent.VK_U);
-		item.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_Z, KeyEvent.CTRL_MASK));
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gamePanel.undo();
-			}
-		});
-		item.setEnabled(gamePanel.canUndo());
-		menu.add(item, UNDO_INDEX);
 
-		item = new JMenuItem("Redo");
-		item.setMnemonic(KeyEvent.VK_R);
-		item.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_Y, KeyEvent.CTRL_MASK));
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gamePanel.redo();
-			}
-		});
-		item.setEnabled(gamePanel.canRedo());
-		menu.add(item, REDO_INDEX);
 
-		item = new JMenuItem("Hint");
-		item.setMnemonic(KeyEvent.VK_H);
-		item.setToolTipText("Highlights a possible move.");
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (gamePanel.allowHint(((JMenuItem) e.getSource()).getTopLevelAncestor())) {
-					gamePanel.hint(true);
-				}
-			}
-		});
-		menu.add(item, HINT_INDEX);
-
-		menu.addSeparator();
+	
 
 		item = new JMenuItem("Save Game");
 		item.setMnemonic(KeyEvent.VK_S);
@@ -165,7 +126,7 @@ public class MahjongBoard extends JFrame {
 			}
 		});
 		item.setEnabled(false);
-		menu.add(item, SAVE_INDEX);
+		//menu.add(item, SAVE_INDEX);
 
 		item = new JMenuItem("Exit Game");
 		item.setToolTipText("Exits the game. To continue from the current game state, use Save Game first.");
@@ -211,30 +172,6 @@ public class MahjongBoard extends JFrame {
 		menubar.add(menu);
 		setJMenuBar(menubar);
 
-		menu = new JMenu("Help");
-		menu.setMnemonic(KeyEvent.VK_H);
-
-		item = new JMenuItem("Operation");
-		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JPanel panel = new JPanel();
-				JTextArea text = new JTextArea();
-				JScrollPane scrollPane = new JScrollPane(text);
-				
-				text.setLineWrap(true);
-				text.setWrapStyleWord(true);
-				text.setTabSize(2);
-				scrollPane.setPreferredSize(new Dimension(550, 350));
-				panel.add(scrollPane);
-				helpFrame.setTitle("Operation Instructions");
-				helpFrame.add(panel);
-				helpFrame.setVisible(true);
-				helpFrame.setSize(600, 400);
-			}
-		});
-		menu.add(item);
 		item = new JMenuItem("Game Rules");
 		item.addActionListener(new ActionListener() {
 			@Override
@@ -300,10 +237,7 @@ public class MahjongBoard extends JFrame {
 		});
 		gamePanel.resizeRemovedFrame();
 	}
-	/**
-	 * Calls up a dialog to check what action the user wants to perform after
-	 * the last possible tile set is removed
-	 */
+	
 	public void checkEndGame() {
 		String[] options = {"New Game", "Cancel", "Exit Game"};
 		int selection = JOptionPane.showOptionDialog(this, "No more moves exist.\n" +
@@ -325,15 +259,7 @@ public class MahjongBoard extends JFrame {
 			break;
 		}
 	}
-	/**
-	 * Called to enable the undo/redo menus, save menu, etc.
-	 */
-	public void checkEnabledMenus() {
-		JMenu menu = getJMenuBar().getMenu(0);
-		menu.getMenuComponent(UNDO_INDEX).setEnabled(gamePanel.canUndo());
-		menu.getMenuComponent(REDO_INDEX)
-				.setEnabled(gamePanel.canRedo());
-	}
+
 
 	private void close() {
 		WindowEvent event = new WindowEvent(this, WindowEvent.WINDOW_CLOSING);
@@ -358,7 +284,7 @@ public class MahjongBoard extends JFrame {
 
 		add(gamePanel);
 
-		checkEnabledMenus();
+		
 
 		setTitle(title + gamePanel.gameNumber);
 		repaint();
