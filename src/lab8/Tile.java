@@ -30,17 +30,14 @@ abstract public class Tile extends JPanel implements Comparable<Tile> {
 	protected final Color BLUE = Color.BLUE;
 	protected final Color BLACK = Color.BLACK;
 	protected final Color GREEN = new Color(0, 150, 0);
-	protected final Color RED = Color.RED;
-	protected final Color WHITE = Color.WHITE;
 	protected final Color IVORY = new Color(245, 245, 214);
 	protected final Color LIGHT_GRAY = Color.LIGHT_GRAY;
-	protected final Color LILAC = new Color(255, 185, 255);
-	protected final Color HIGHLIGHT = LILAC;
-	protected final Color HINT = GREEN;
+        protected final Color RED = Color.RED;
+	protected final Color WHITE = Color.WHITE;
+	protected final Color HIGHLIGHT = Color.BLUE;
 
-	private boolean isSelected = false;
-	private boolean isHint = false;
-	protected boolean isDirty = false;
+	private boolean isMatched = false;
+	protected boolean noMatch = false;
 
 	public boolean matches(Tile otherTile) {
 		return otherTile != null && otherTile.getClass() == this.getClass();
@@ -61,13 +58,8 @@ abstract public class Tile extends JPanel implements Comparable<Tile> {
 		}
 	}
 
-	protected void highlight(boolean isSelected) {
-		this.isSelected = isSelected;
-		revalidate();
-	}
-
-	protected void hint(boolean enableHint) {
-		this.isHint = enableHint;
+	protected void highlight(boolean isMatched) {
+		this.isMatched = isMatched;
 		revalidate();
 	}
 
@@ -95,10 +87,7 @@ abstract public class Tile extends JPanel implements Comparable<Tile> {
 			return 0;
 		}
 
-		// If any of the positions is null, we can't get a reliable comparison,
-		// so we just ignore it and don't make any changes. equals does the
-		// opposite in this case, so it doesn't *exactly* follow the code
-		// convention, but this makes much more sense in this case
+		// chexk and comparethe tiles
 		if (xPos == null || otherTile.xPos == null) {
 			return 0;
 		} else if (yPos == null || otherTile.yPos == null) {
@@ -107,15 +96,12 @@ abstract public class Tile extends JPanel implements Comparable<Tile> {
 			return 0;
 		}
 
-		// If one tile has a higher zPos than another, it is by definition
-		// greater than that other
+		// use zorder to set hihger priority
 		int currentComparison = zPos.compareTo(otherTile.zPos);
 		if (currentComparison != 0) {
 			return currentComparison;
 		}
 
-		// On rows where the yPos is equal OR on the 1, -1 and 0 rows together,
-		// we compare the xPos
 		if (yPos.equals(otherTile.yPos)
 				|| (Math.abs(yPos) == 1 && otherTile.yPos == 0)
 				|| (Math.abs(otherTile.yPos) == 1 && yPos == 0)) {
@@ -189,7 +175,7 @@ abstract public class Tile extends JPanel implements Comparable<Tile> {
 		g2.drawPolygon(new int[]{5, 10, WIDTH + 10, WIDTH + 5},
 				new int[]{HEIGHT, HEIGHT - 5, HEIGHT - 5, HEIGHT}, 4);
 
-		paint = new GradientPaint(WIDTH, 0, WHITE, 10, HEIGHT, isSelected ? HIGHLIGHT : isHint ? HINT : BLACK);
+		paint = new GradientPaint(WIDTH, 0, WHITE, 10, HEIGHT, isMatched ? HIGHLIGHT : BLACK);
 		g2.setPaint(paint);
 
 		g2.fillRect(10, 0, WIDTH, HEIGHT - 5);
@@ -224,7 +210,7 @@ abstract public class Tile extends JPanel implements Comparable<Tile> {
 		g2.setColor(Color.LIGHT_GRAY);
 		g2.drawRoundRect(5, 5, WIDTH, HEIGHT - 5, 15, 15);
 
-		paint = new GradientPaint(WIDTH, 0, WHITE, 10, HEIGHT, isSelected ? HIGHLIGHT : isHint ? HINT : IVORY);
+		paint = new GradientPaint(WIDTH, 0, WHITE, 10, HEIGHT, isMatched ? HIGHLIGHT : IVORY);
 		g2.setPaint(paint);
 
 		g2.fillRoundRect(11, 1, WIDTH - 1, HEIGHT - 6, 16, 16);

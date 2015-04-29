@@ -13,7 +13,7 @@ public class WhiteDragonTile extends Tile {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		
+		// painting white dragon tile
 		g.setColor(BLUE);
 		int x1;
 		int y1 = 10;

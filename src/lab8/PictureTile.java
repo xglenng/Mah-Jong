@@ -35,20 +35,17 @@ abstract public class PictureTile extends Tile{
 	
 	@Override
     public String toString() {
-        String[] validNames = {"Chrysanthemum", "Orchid", "Plum", "Bamboo", "Spring",
+        String[] tileNames = {"Chrysanthemum", "Orchid", "Plum", "Bamboo", "Spring",
             "Summer", "Fall", "Winter"};
     
         int index = -1;
-        for (int i = 0; i < validNames.length; i++) {
-            if (validNames[i].equals(name)) {
+        for (int i = 0; i < tileNames.length; i++) {
+            if (tileNames[i].equals(name)) {
                 index = i;
                 break;
             }
         }
         
-        if (index < 0) {
-            return "Invalid Picture Tile";
-        }
         return name;
     }
 }

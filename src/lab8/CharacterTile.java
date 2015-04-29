@@ -45,15 +45,12 @@ public class CharacterTile extends Tile {
 	}
     
     public CharacterTile(char symbol) {
-		if (symbols.get(symbol) == null) {
-			throw new IllegalArgumentException("Invalid character to initialize " +
-					"character tile (" + symbol + ")");
-		}
+		
         this.symbol = symbol;
 		
-		setToolTipText(toString());
+		
     }
-	public CharacterTile(char symbol, boolean drawRound) {
+    public CharacterTile(char symbol, boolean drawRound) {
 		this(symbol);
 		this.drawRound = drawRound;
 	}
@@ -108,9 +105,6 @@ public class CharacterTile extends Tile {
 	@Override
     public String toString() {
 		String name = symbolNames.get(symbol);
-		if (name == null) {
-			return "Invalid character string";
-		}
 		return name;
     }
 }

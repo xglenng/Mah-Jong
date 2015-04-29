@@ -316,12 +316,12 @@ public class PlayingBoard extends JPanel implements MouseListener {
 		Collections.sort(deck);
 
 		for (Tile tile : deck) {
-			if (!init && !tile.isDirty) {
+			if (!init && !tile.noMatch) {
 				continue;
 			}
 			tile.place(getWidth(), getHeight());
 			add(tile);
-			tile.isDirty = false;
+			tile.noMatch = false;
 		}
 
 		// zorder command
@@ -363,7 +363,7 @@ public class PlayingBoard extends JPanel implements MouseListener {
 			System.err.println("missing the title");
 		} else {
 			
-			tile.isDirty = true;
+			tile.noMatch = true;
 			tilesDeleted.push(tile);
 			remove(tile);
 			redraw();

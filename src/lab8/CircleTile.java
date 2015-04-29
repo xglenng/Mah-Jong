@@ -33,17 +33,14 @@ public class CircleTile extends RankTile {
 			g.fillOval(31, 28, size, size);
 			drawSymbol(31, 28, size, g);
 			
-			// This segment draws our circle of circles
-			// Gets the radian for each segment by 2pi/numberOfCircles, and
-			// multiplies that by the radius around our reference point (the
-			// center of the large circle
+                        // logic applied to draw my circles
 			size = 5;
-			int numberOfCircles = 12;
+			int numCircles = 12;
 			int x1 = 35;
 			int y1 = 32;
-			double rotation = 2 * Math.PI / numberOfCircles;
+			double rotation = 2 * Math.PI / numCircles;
 			
-			for (int circle = 0; circle < numberOfCircles; circle ++) {
+			for (int circle = 0; circle < numCircles; circle ++) {
 				double position = circle * rotation;
 				
 				g.setColor(WHITE);
@@ -58,7 +55,7 @@ public class CircleTile extends RankTile {
 			yStart = 8;
 			spacing = 4;
 			
-			drawVerticalCircles(size, 2, xStart, yStart, spacing, new Color[] {GREEN, RED}, g);
+			straightCirlces(size, 2, xStart, yStart, spacing, new Color[] {GREEN, RED}, g);
 			break;
 		case 3:
 			size = 17;
@@ -74,8 +71,8 @@ public class CircleTile extends RankTile {
 			yStart = 8;
 			spacing = 4;
 			
-			drawVerticalCircles(23, 2, xStart, yStart, spacing, new Color[]{BLUE, GREEN}, g);
-			drawVerticalCircles(23, 2, xStart + size, yStart, spacing, new Color[]{GREEN, BLUE}, g);			
+			straightCirlces(23, 2, xStart, yStart, spacing, new Color[]{BLUE, GREEN}, g);
+			straightCirlces(23, 2, xStart + size, yStart, spacing, new Color[]{GREEN, BLUE}, g);			
 			break;
 		case 5:
 			size = 17;
@@ -84,13 +81,13 @@ public class CircleTile extends RankTile {
 			spacing = 2 + size;
 			colors = new Color[] {BLUE, GREEN};
 			
-			drawVerticalCircles(size, 2, xStart, yStart, spacing, colors, g);
+			straightCirlces(size, 2, xStart, yStart, spacing, colors, g);
 			
 			colors = new Color[] {RED};
-			drawVerticalCircles(size, 1, xStart + size, yStart + size + 2, spacing, colors, g);
+			straightCirlces(size, 1, xStart + size, yStart + size + 2, spacing, colors, g);
 			
 			colors = new Color[] {GREEN, BLUE};
-			drawVerticalCircles(size, 2, xStart + size * 2,yStart,  spacing, colors, g);
+			straightCirlces(size, 2, xStart + size * 2,yStart,  spacing, colors, g);
 			break;
 		case 6:
 			size = 17;
@@ -99,8 +96,8 @@ public class CircleTile extends RankTile {
 			spacing = 2;
 			colors = new Color[] {GREEN, RED, RED};
 			
-			drawVerticalCircles(size, 3, xStart, yStart, spacing, colors, g);
-			drawVerticalCircles(size, 3, xStart + size + 5, yStart, spacing, colors, g);
+			straightCirlces(size, 3, xStart, yStart, spacing, colors, g);
+			straightCirlces(size, 3, xStart + size + 5, yStart, spacing, colors, g);
 			break;
 		case 7:
 			size = 13;
@@ -116,8 +113,8 @@ public class CircleTile extends RankTile {
 			spacing = 4;
 			colors = new Color[] {RED};
 			
-			drawVerticalCircles(size, 2, xStart, yStart, spacing, colors, g);
-			drawVerticalCircles(size, 2, xStart + size * 2, yStart, spacing, colors, g);
+			straightCirlces(size, 2, xStart, yStart, spacing, colors, g);
+			straightCirlces(size, 2, xStart + size * 2, yStart, spacing, colors, g);
 			break;
 		case 8:
 			size = 13;
@@ -126,8 +123,8 @@ public class CircleTile extends RankTile {
 			spacing = 2;
 			colors = new Color[] {BLUE};
 			
-			drawVerticalCircles(size, 4, xStart, yStart, spacing, colors, g);
-			drawVerticalCircles(size, 4, xStart + size * 2, yStart, spacing, colors, g);
+			straightCirlces(size, 4, xStart, yStart, spacing, colors, g);
+			straightCirlces(size, 4, xStart + size * 2, yStart, spacing, colors, g);
 			break;
 		case 9:
 			size = 17;
@@ -136,15 +133,15 @@ public class CircleTile extends RankTile {
 			spacing = 2;
 			colors = new Color[] {GREEN, RED, BLUE};
 			
-			drawVerticalCircles(size, 3, xStart, yStart, spacing, colors, g);
-			drawVerticalCircles(size, 3, xStart + size, yStart, spacing, colors, g);
-			drawVerticalCircles(size, 3, xStart + size * 2, yStart, spacing, colors, g);
+			straightCirlces(size, 3, xStart, yStart, spacing, colors, g);
+			straightCirlces(size, 3, xStart + size, yStart, spacing, colors, g);
+			straightCirlces(size, 3, xStart + size * 2, yStart, spacing, colors, g);
 		default:
 			break;
 		}
 	}
 	
-	private void drawVerticalCircles(int size, int numberOfRepeats, 
+	private void straightCirlces(int size, int numberOfRepeats, 
 			int xStart, int yStart, int spacing, 
 			Color[] colors, Graphics g) {
 		if (colors.length != numberOfRepeats) {
@@ -169,15 +166,15 @@ public class CircleTile extends RankTile {
 		}
 	}
 	
-	private void drawDiagonalCircles(int size, int numberOfCircles,
+	private void drawDiagonalCircles(int size, int numCircles,
 			int xStart, int yStart, int xSpacing, int ySpacing,
 			Color[] colors, Graphics g) {
 		
-		if (colors == null || colors.length != numberOfCircles) {
+		if (colors == null || colors.length != numCircles) {
 			if (colors.length == 1) {
 				Color color = colors[0];
-				colors = new Color[numberOfCircles];
-				for (int i = 0; i < numberOfCircles; i++) {
+				colors = new Color[numCircles];
+				for (int i = 0; i < numCircles; i++) {
 					colors[i] = color;
 				}
 			}
@@ -187,7 +184,7 @@ public class CircleTile extends RankTile {
 			}
 		}
 		
-		for (int i = 0; i < numberOfCircles; i++) {
+		for (int i = 0; i < numCircles; i++) {
 			int x = xStart + i * (size + xSpacing);
 			int y = yStart + i * (size + ySpacing);
 			g.setColor(colors[i]);
